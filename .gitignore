@@ -1,0 +1,4 @@
+**/__pycache__
+.spyproject/
+main_graphKernels.py
+main.sh
