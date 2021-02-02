@@ -652,7 +652,6 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
     Diss.edgesParam['ins'] = best_GA1[7]
     Diss.edgesParam['del'] = best_GA1[8]
     
-    #setting bucket[label] when sampletPaths is "on" is a kind of stratified granulation
     if extractStrategy_Granulator in ['samplePaths', 'paths', 'cliques']:
         ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
     elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
@@ -760,6 +759,7 @@ for label in range(len(coppie)):
 ###--Comment for debug
 t = time.time()
 bounds_GA2, CXPB_GA2, MUTPB_GA2, pop = setup_GA2_DE(len(ALPHABET), n_threads)
+# TuningResults_GA2 = differential_evolution(fitnessfunction_GA2_DE, bounds_GA2, args=(trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix, trSet_EMB_LabelVector, vsSet_EMB_LabelVector), maxiter=20, init=pop, recombination=CXPB_GA2, mutation=MUTPB_GA2, workers=n_threads, polish=False, updating='deferred', disp=True)
 TuningResults_GA2 = differential_evolution(fitnessfunction_GA2_DE, bounds_GA2, args=(trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix, trSet_EMB_LabelVector, vsSet_EMB_LabelVector), maxiter=20, init=pop, recombination=CXPB_GA2, mutation=MUTPB_GA2, workers=n_threads, polish=False, updating='deferred', disp=True)
 best_GA2 = [round(i) for i in TuningResults_GA2.x]
 elapsedTime_SecondGenetic = time.time() - t
@@ -768,7 +768,14 @@ elapsedTime_SecondGenetic = time.time() - t
 """ Test Set """
 t = time.time()
 
-tsSetGlobalEmbed_Mat=numpy.zeros((tsSet_size,0),dtype=int)
+# tsSetGlobalEmbed_Mat=numpy.zeros((tsSet_size,0),dtype=int)
+# for label in range(len(coppie)):
+#     classDiss = localConcepts[label][0]
+#     classAlphabet = localConcepts[label][1]
+#     classTau_k = localConcepts[label][2]
+#     tsSet_EMB_InstanceMatrix, tsSet_EMB_LabelVector = symbolicHistogramsEmbedder(tsSet_EXP, classAlphabet, classTau_k, classDiss.BMF, n_jobs=n_threads)
+#     localConcepts[label].append(tsSet_EMB_InstanceMatrix)
+
 for label in range(len(coppie)):
     classDiss = localConcepts[label][0]
     classAlphabet = localConcepts[label][1]
