@@ -615,7 +615,7 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
             thisSubset_vs[j]=vsSet_EXP[k]
             j=j+1
                 
-    
+    print('\ncoppie: ',coppie[label],'\n')
     TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
                                               bounds_GA1, \
                                               args=(coppie[label][0], bucketCoppie, thisSubset_tr, thisSubset_vs, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
