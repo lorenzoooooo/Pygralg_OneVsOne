@@ -54,9 +54,9 @@ from GraphTypes import Letter
 graphDissimilarity = Letter.LETTERdiss()
 parserFunction = Letter.parser
 
-trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
-vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Validation/"
-tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Test/"
+trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
+vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Validation/"
+tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Test/"
 fold = [trDir, vsDir, tsDir]
 
 """ Load Dataset """
@@ -201,23 +201,41 @@ coppie=list(combinations(range(numClasses),2))
 #thisSubset_tr={}
 #thisSubset_vs={}
 
-#coppia: [1][9]
-bucketCoppie= bucket[1] + bucket[9]
-
-eta=0.7303868359872551                               #best_GA1[0]
-#tau_f=0.78                           #best_GA1[1]
-tau_f=0.04248750722885508                            #best_GA1[1]
-Q=4                                                  #best_GA1[2]
+# eta=0.7303868359872551                               #best_GA1[0]
+# #tau_f=0.78                           #best_GA1[1]
+# tau_f=0.04248750722885508                            #best_GA1[1]
+# Q=4                                                  #best_GA1[2]
+# Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
+# Diss.nodesParam['sub'] = 0.9918734024806518          #best_GA1[3]
+# Diss.nodesParam['ins'] = 0.34797857594874326         #best_GA1[4]
+# Diss.nodesParam['del'] = 0.4532498430956843          #best_GA1[5]
+# Diss.edgesParam['sub'] = 0.3508015365254712          #best_GA1[6]
+# Diss.edgesParam['ins'] = 0.6847256434510226          #best_GA1[7]
+# Diss.edgesParam['del'] = 0.4815671531792641          #best_GA1[8]
+eta=0.3876078260594895                               #best_GA1[0]
+tau_f=0.08472613477275137                            #best_GA1[1]
+Q=3                                                  #best_GA1[2]
 Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
-Diss.nodesParam['sub'] = 0.9918734024806518          #best_GA1[3]
-Diss.nodesParam['ins'] = 0.34797857594874326         #best_GA1[4]
-Diss.nodesParam['del'] = 0.4532498430956843          #best_GA1[5]
-Diss.edgesParam['sub'] = 0.3508015365254712          #best_GA1[6]
-Diss.edgesParam['ins'] = 0.6847256434510226          #best_GA1[7]
-Diss.edgesParam['del'] = 0.4815671531792641          #best_GA1[8]
+Diss.nodesParam['sub'] = 0.644916026158982          #best_GA1[3]
+Diss.nodesParam['ins'] = 0.763627489641594         #best_GA1[4]
+Diss.nodesParam['del'] = 0.29230366544777353          #best_GA1[5]
+Diss.edgesParam['sub'] = 0.7071137586809673          #best_GA1[6]
+Diss.edgesParam['ins'] = 0.9673618676229165          #best_GA1[7]
+Diss.edgesParam['del'] = 0.6446656067467292        #best_GA1[8]
+
 theta_candidates=[0, 1, 0.5, 0.25, 0.125]
 epsilon=1.1
-ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, 1)
-print("[0.73038684 0.04248751 4.04608225 0.9918734  0.34797858 0.45324984 0.35080154 0.68472564 0.48156715]")
-print("len(ALPHABET)",len(ALPHABET))
-#-dataName Letter1 -runID 1 -extractG stratPaths -extractE paths -W 797
+coppie=list(combinations(range(numClasses),2))
+i=0
+a={}
+for label in range(len(coppie)):
+    print('\ncoppie: ',coppie[label],'\n')
+    bucketCoppie= bucket[coppie[label][0]] + bucket[coppie[label][1]]
+    ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, 1)
+    print("len(ALPHABET)",len(ALPHABET))
+    if len(ALPHABET)==0:
+        a[i]=coppie[label]
+        i=i+1
+    pickle.dump({'classe[label]':a}, open('Letter1' + '.pkl','wb'))
+#-dataName Letter1 -runID 1 -extractG stratSamplePaths -extractE paths -W 797
+#print("[0.73038684 0.04248751 4.04608225 0.9918734  0.34797858 0.45324984 0.35080154 0.68472564 0.48156715]")

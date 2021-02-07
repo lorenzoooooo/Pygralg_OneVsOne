@@ -661,6 +661,7 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
     print(best_GA1)
     print("ALPHABET size: {}".format(len(ALPHABET)) )
     if len(ALPHABET)==0:
+        print("coppia\t",coppie[label])
         print("eta\t", eta)
         print("tau_f\t",tau_f)
         print("Q\t",Q)
@@ -683,7 +684,7 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
                      'tau_f':tau_f,
                      'theta_candidates':theta_candidates,
                      'epsilon':epsilon},
-                     open(dataName + '_' + runID + '1' + '.pkl','wb'))
+                     open(dataName + '_' + extractStrategy_Granulator + '_' + coppie[label][0] + '_' + coppie[label][1] + '.pkl','wb'))
         #ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
         raise('error')
     alphabet, tau_k = zip(*ALPHABET)
