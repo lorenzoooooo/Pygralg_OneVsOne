@@ -64,8 +64,8 @@ sampleStrategy = Graph_Sampling.SRW_RWF_ISRW()                  # declare the sa
 subgraphsOrder = 5                                              # max subgraphs order (only if cliques are NOT involved)
 theta_candidates = BSP(0, 1, 0.1)                               # list of theta candidates for BSAS
 epsilon = 1.1                                                   # tolerance value in symbols recognition
-n_threads = 56                                                  # number of threads for parallel execution
-#n_threads = 1
+#n_threads = 56                                                  # number of threads for parallel execution
+n_threads = 1
 delimiters = "_", "."                                           # Name file contains id and label
 
 
@@ -113,9 +113,9 @@ elif dataName == 'Letter1':
 #     trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
 #     vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Validation/"
 #     tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Test/"
-    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Training/"                                                    # paths DIETrack1, 2 and 3
-    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Validation/"
-    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Letter1/Test/"
+    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Training/"                                                    # paths DIETrack1, 2 and 3
+    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Validation/"
+    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Test/"
     # trDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
     # vsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Validation/"
     # tsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Test/"
@@ -683,7 +683,8 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
                      'eta':eta,
                      'tau_f':tau_f,
                      'theta_candidates':theta_candidates,
-                     'epsilon':epsilon},
+                     'epsilon':epsilon,
+                     'bucketCoppie':bucketCoppie},
                      open(dataName + '_' + extractStrategy_Granulator + '_' + coppie[label][0] + '_' + coppie[label][1] + '.pkl','wb'))
         #ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
         raise('error')

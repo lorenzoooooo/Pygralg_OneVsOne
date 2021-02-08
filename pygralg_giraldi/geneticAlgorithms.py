@@ -309,7 +309,7 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
     # Strip input data
     #bucket, trSet_EXP, vsSet_EXP, extractStrategy_Granulator, numClasses, graphDissimilarity, theta_candidates, epsilon, dataName = data
     label, bucket, trSet_EXP, vsSet_EXP, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName = data
-
+    
     #Class relabeling
     #Target class is 1
     # trSet_EXPrelabel={k: (v[0],1) if(v[1]==label) else (v[0],0) for k, v in trSet_EXP.items()}
