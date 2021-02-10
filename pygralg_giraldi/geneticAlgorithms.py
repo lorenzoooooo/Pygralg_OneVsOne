@@ -387,18 +387,18 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
         bucketSize = sum([len(bucket[c]) for c in range(numClasses)])
 
     # Prior exit if alphabet is empty
-    count=0
-    if ALPHABET == []:
-        print("\n\n\tEmpty Alphabet\n\n")
-        #tau_f=0.05248750722885508
-        while ALPHABET==[]:
-             ALPHABET = ensembleGranulator(bucket, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon)
-             bucketSize = len(bucket)
-             count=count+1
+    # count=0
+    # if ALPHABET == []:
+    #     print("\n\n\tEmpty Alphabet\n\n")
+    #     #tau_f=0.05248750722885508
+    #     while ALPHABET==[]:
+    #          ALPHABET = ensembleGranulator(bucket, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon)
+    #          bucketSize = len(bucket)
+    #          count=count+1
     
-     # if ALPHABET == []:
-     #    print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tEmpty Alphabet")
-     #    return 2
+    if ALPHABET == []:
+       print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tEmpty Alphabet")
+       return 2
 
     ALPHABET, tau_k = zip(*ALPHABET)
 
