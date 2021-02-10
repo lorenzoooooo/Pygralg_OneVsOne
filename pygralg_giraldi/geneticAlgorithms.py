@@ -309,13 +309,14 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
     # Strip input data
     #bucket, trSet_EXP, vsSet_EXP, extractStrategy_Granulator, numClasses, graphDissimilarity, theta_candidates, epsilon, dataName = data
     label, bucket, trSet_EXP, vsSet_EXP, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName = data
-    
+    print('label\t',label,'\nextractStrategy_Granulator\t',extractStrategy_Granulator,'\ngraphDissimilarity\t',graphDissimilarity,'\ntheta_candidates\t', theta_candidates,'\nepsilon\t',epsilon,'\ndataName\t',dataName)
+    print('\n\ngenetic code\t',genetic_code,'\n\n')
     #Class relabeling
     #Target class is 1
     # trSet_EXPrelabel={k: (v[0],1) if(v[1]==label) else (v[0],0) for k, v in trSet_EXP.items()}
     # vsSet_EXPrelabel={k: (v[0],1) if(v[1]==label) else (v[0],0) for k, v in vsSet_EXP.items()}
     
-    # Strip parameters from genetic code
+    #Strip parameters from genetic code
     eta = genetic_code[0]
     tau_f = genetic_code[1]
     Q = round(genetic_code[2])
@@ -325,7 +326,11 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
     pEdgeSubs = genetic_code[6]
     pEdgeIns = genetic_code[7]
     pEdgeDel = genetic_code[8]
-
+    
+    # eta=0.7303868359872551                               #best_GA1[0]
+    # tau_f=0.04248750722885508                            #best_GA1[1]
+    # Q=4                                                  #best_GA1[2]
+    
     # nodes/edges dissimilarities setup
     if dataName == 'GREC':
         vParam1 = genetic_code[9]
@@ -360,6 +365,15 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
     Diss.edgesParam['sub'] = pEdgeSubs
     Diss.edgesParam['ins'] = pEdgeIns
     Diss.edgesParam['del'] = pEdgeDel
+    
+    # # GED setup
+    # Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
+    # Diss.nodesParam['sub'] = 0.9918734024806518          #best_GA1[3]
+    # Diss.nodesParam['ins'] = 0.34797857594874326         #best_GA1[4]
+    # Diss.nodesParam['del'] = 0.4532498430956843          #best_GA1[5]
+    # Diss.edgesParam['sub'] = 0.3508015365254712          #best_GA1[6]
+    # Diss.edgesParam['ins'] = 0.6847256434510226          #best_GA1[7]
+    # Diss.edgesParam['del'] = 0.4815671531792641          #best_GA1[8]
 
     # Set useful parameters
     alpha = 0.9
@@ -373,9 +387,18 @@ def fitnessfunction_GA1_DE(genetic_code, *data):
         bucketSize = sum([len(bucket[c]) for c in range(numClasses)])
 
     # Prior exit if alphabet is empty
+    count=0
     if ALPHABET == []:
-        print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tEmpty Alphabet")
-        return 2
+        print("\n\n\tEmpty Alphabet\n\n")
+        #tau_f=0.05248750722885508
+        while ALPHABET==[]:
+             ALPHABET = ensembleGranulator(bucket, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon)
+             bucketSize = len(bucket)
+             count=count+1
+    
+     # if ALPHABET == []:
+     #    print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tEmpty Alphabet")
+     #    return 2
 
     ALPHABET, tau_k = zip(*ALPHABET)
 

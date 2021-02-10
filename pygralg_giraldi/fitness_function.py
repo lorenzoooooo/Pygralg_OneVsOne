@@ -1,10 +1,9 @@
-# # -*- coding: utf-8 -*-
-# """
-# Created on Fri Jan 29 20:07:26 2021
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb  9 14:22:49 2021
 
-# @author: Utente
-# """
-
+@author: Utente
+"""
 from GraphLoaders.DotLoader import DotLoader
 from GraphDissimilarities.GED import GED
 from util.misc import clipper, BSP
@@ -35,17 +34,17 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import accuracy_score,confusion_matrix
 from scipy.optimize import differential_evolution
-from joblib import Parallel, delayed
+from joblib import Parallel, delayed 
 
-# """ Set some useful parameters """                              # NOTE: some of them can be moved to command line
 sampleStrategy = Graph_Sampling.SRW_RWF_ISRW()                  # declare the sampling strategy (ignored for exhaustive- and clique-based strategies)
 subgraphsOrder = 5                                              # max subgraphs order (only if cliques are NOT involved)
-theta_candidates = BSP(0, 1, 0.1)                               # list of theta candidates for BSAS
-epsilon = 1.1                                                   # tolerance value in symbols recognition
-#n_threads = -1                                                  # number of threads for parallel execution
 n_threads = 1
-delimiters = "_", "."                                           # Name file contains id and label
-
+delimiters = "_", "."
+theta_candidates = BSP(0, 1, 0.1)
+epsilon=1.1
+W=797
+extractStrategy_Granulator='stratPaths'
+dataName='Letter1'
 
 """ Set metric and problem """
 from util.normalizeLetter import normalize
@@ -137,51 +136,34 @@ print("Loaded " + str(tsSet_size) + " graphs for Test Set.")
 print("\n")
 
 '''Extractor for Granulatore'''
-'''Strat Paths'''
-# bucket = [None] * numClasses     #dichiaro array di numClasses elementi
-# for thisClass in range(numClasses):
-#     print("Working on class " + str(thisClass + 1) + " out of " + str(numClasses))
-#     # strip training set patterns belonging to current class
-#     thisSubset = [item[0] for item in list(trSet.values()) if item[1] == thisClass]
-#     # extract
-#     thisBucket = Parallel(verbose=10, n_jobs=n_threads)(delayed(exhaustiveExtractor)(thisSubset[k], subgraphsOrder, isConnected=True) for k in range(len(thisSubset)))
-#     thisBucket = [item for sublist in thisBucket for item in sublist]
-#     # collect
-#     bucket[thisClass] = thisBucket
-
-'''stratSamplePaths'''
-W=797
-bucket = [None] * numClasses
+'''stratPaths'''
+bucket = [None] * numClasses     #dichiaro array di numClasses elementi
 for thisClass in range(numClasses):
     print("Working on class " + str(thisClass + 1) + " out of " + str(numClasses))
-    thisBucket_class = []
     # strip training set patterns belonging to current class
     thisSubset = [item[0] for item in list(trSet.values()) if item[1] == thisClass]
-    # find the number of subgraphs for current class
-    thisW_class = int(round(classFrequency_trSet[thisClass] * W))
-    # for each order up to the maximum 'subgraphsOrder'
-    for o in range(1, subgraphsOrder + 1):
-        thisBucket_order = []
-        thisW_order = int(round(thisW_class / subgraphsOrder))                              # find the number of subgraphs of a given order for current class
-        while len(thisBucket_order) != thisW_order:
-            graphID = random.randrange(len(thisSubset))                                     # pick a graph at random
-            thisGraph = thisSubset[graphID]                                                 #
-            nodeID = random.randrange(len(thisGraph.nodes()))                               # pick a node at random
-            # extract
-            try:
-                this_o = o if o <= thisGraph.order() else thisGraph.order()
-                thisSubgraph = sampleStrategy.random_walk_sampling_simple(thisGraph, this_o)
-                thisSubgraph = thisGraph.subgraph(thisSubgraph.nodes()).copy()
-                thisSubgraph.name = thisGraph.name + '_' + str(time.time())
-                thisBucket_order.append(thisSubgraph)
-            except ValueError:
-                pass
-        thisBucket_class = thisBucket_class + thisBucket_order
-    print("\tExtracted " + str(len(thisBucket_class)) + " subgraphs for current class.")
-    # merge with the overall bucket
-    bucket[thisClass] = thisBucket_class
+    # extract
+    thisBucket = Parallel(verbose=10, n_jobs=n_threads)(delayed(exhaustiveExtractor)(thisSubset[k], subgraphsOrder, isConnected=True) for k in range(len(thisSubset)))
+    thisBucket = [item for sublist in thisBucket for item in sublist]
+    # collect
+    bucket[thisClass] = thisBucket
 
-bounds_GA1, CXPB_GA1, MUTPB_GA1 = setup_GA1_DE(n_threads, 'stratSamplePaths', numClasses, 'Letter1')
+'''Extractor for Embedder'''
+'''Paths'''
+# trSet_EXP = copy.deepcopy(trSet)
+# vsSet_EXP = copy.deepcopy(vsSet)
+# tsSet_EXP = copy.deepcopy(tsSet)
+# output = Parallel(verbose=10, n_jobs=n_threads)(delayed(exhaustiveExtractor)(trSet[k][0], subgraphsOrder, isConnected=True) for k in sorted(trSet.keys()))      # process training graphs
+# for k in sorted(trSet.keys()):
+#     trSet_EXP[k] = (output[k], trSet_EXP[k][1])
+# output = Parallel(verbose=10, n_jobs=n_threads)(delayed(exhaustiveExtractor)(vsSet[k][0], subgraphsOrder, isConnected=True) for k in sorted(vsSet.keys()))      # process validation graphs
+# for k in sorted(vsSet.keys()):
+#     vsSet_EXP[k] = (output[k], vsSet_EXP[k][1])
+# output = Parallel(verbose=10, n_jobs=n_threads)(delayed(exhaustiveExtractor)(tsSet[k][0], subgraphsOrder, isConnected=True) for k in sorted(tsSet.keys()))      # process test graphs
+# for k in sorted(tsSet.keys()):
+#     tsSet_EXP[k] = (output[k], tsSet_EXP[k][1])
+    
+bounds_GA1, CXPB_GA1, MUTPB_GA1 = setup_GA1_DE(n_threads, extractStrategy_Granulator, numClasses, dataName)
 #Genetic optimization class by class parameters
 # Binary ensemble of classifier for class
 localConcepts={}
@@ -191,51 +173,78 @@ localConcepts={}
 classe=len(trSet)/numClasses   #suppongo che le classi abbiano tutte lo stesso numero di elementi
 classe=int(classe)
 coppie=list(combinations(range(numClasses),2))
-
-#pickle 1
-eta=0.3876078260594895                               #best_GA1[0]
-tau_f=0.08472613477275137                            #best_GA1[1]
-Q=3                                                  #best_GA1[2]
-Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
-Diss.nodesParam['sub'] = 0.644916026158982          #best_GA1[3]
-Diss.nodesParam['ins'] = 0.763627489641594         #best_GA1[4]
-Diss.nodesParam['del'] = 0.29230366544777353          #best_GA1[5]
-Diss.edgesParam['sub'] = 0.7071137586809673          #best_GA1[6]
-Diss.edgesParam['ins'] = 0.9673618676229165          #best_GA1[7]
-Diss.edgesParam['del'] = 0.6446656067467292        #best_GA1[8]
-
-theta_candidates = BSP(0, 1, 0.1)
-epsilon=1.1
-coppie=list(combinations(range(numClasses),2))
-print('coppie:\t',coppie[label],'\n')
-bucketCoppie= bucket[coppie[label][0]] + bucket[coppie[label][1]]
-ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, 1)
-print("len(ALPHABET)",len(ALPHABET))
+thisSubset_tr={}
+thisSubset_vs={}
 
 # coopie 1-9
-# eta=0.7303868359872551                               #best_GA1[0]
-# #tau_f=0.78                           #best_GA1[1]
-# tau_f=0.04248750722885508                            #best_GA1[1]
-# Q=4                                                  #best_GA1[2]
-# Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
-# Diss.nodesParam['sub'] = 0.9918734024806518          #best_GA1[3]
-# Diss.nodesParam['ins'] = 0.34797857594874326         #best_GA1[4]
-# Diss.nodesParam['del'] = 0.4532498430956843          #best_GA1[5]
-# Diss.edgesParam['sub'] = 0.3508015365254712          #best_GA1[6]
-# Diss.edgesParam['ins'] = 0.6847256434510226          #best_GA1[7]
-# Diss.edgesParam['del'] = 0.4815671531792641          #best_GA1[8]
+extractStrategy_Granulator= "samplePaths"
+bucketCoppie= bucket[1] + bucket[9] #alfabeto composto da una coppia di classi
+# j=0
+# for k in trSet.keys():
+#     if trSet_EXP[k][1]==1 or trSet_EXP[k][1]==9:
+#         thisSubset_tr[j]=trSet_EXP[k]
+#         j=j+1
+# j=0
+# for k in vsSet.keys():
+#     if vsSet_EXP[k][1]==1 or vsSet_EXP[k][1]==9:
+#         thisSubset_vs[j]=vsSet_EXP[k]
+#         j=j+1
+eta=0.7303868359872551                               #best_GA1[0]
+tau_f=0.04248750722885508                            #best_GA1[1]
+Q=4                                                  #best_GA1[2]
+# GED setup
+Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
+Diss.nodesParam['sub'] = 0.9918734024806518          #best_GA1[3]
+Diss.nodesParam['ins'] = 0.34797857594874326         #best_GA1[4]
+Diss.nodesParam['del'] = 0.4532498430956843          #best_GA1[5]
+Diss.edgesParam['sub'] = 0.3508015365254712          #best_GA1[6]
+Diss.edgesParam['ins'] = 0.6847256434510226          #best_GA1[7]
+Diss.edgesParam['del'] = 0.4815671531792641          #best_GA1[8]
 
-#i=0
-#a={}
-# for label in range(len(coppie)):
-#     print('\ncoppie: ',coppie[label],'\n')
-#     bucketCoppie= bucket[coppie[label][0]] + bucket[coppie[label][1]]
-#     ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, 1)
-#     print("len(ALPHABET)",len(ALPHABET))
-#     if ALPHABET==[]:
-#         a[i]=coppie[label]
-#         i=i+1
-# pickle.dump({'classe[label]':a}, open('Letter1' + '.pkl','wb'))
 
-# #-dataName Letter1 -runID 1 -extractG stratSamplePaths -extractE paths -W 797
-# #print("[0.73038684 0.04248751 4.04608225 0.9918734  0.34797858 0.45324984 0.35080154 0.68472564 0.48156715]")
+# Set useful parameters
+alpha = 0.9
+
+
+ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon)
+bucketSize = len(bucket)
+
+
+# Prior exit if alphabet is empty
+if ALPHABET == []:
+    print("empty alphabet\n")
+
+ALPHABET, tau_k = zip(*ALPHABET)
+
+# # Embedder
+# trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_tr, ALPHABET, tau_k, Diss.BMF)
+# vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_vs, ALPHABET, tau_k, Diss.BMF)
+
+# # Class relabelling where target class is 1
+# trSet_EMB_LabelVector = (trSet_EMB_LabelVector == 1).astype(int)
+# vsSet_EMB_LabelVector = (vsSet_EMB_LabelVector == 1).astype(int)
+
+# # Classifier
+# KNN = KNeighborsClassifier(n_neighbors=5)
+# KNN.fit(trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector)
+# predicted_vsSet = KNN.predict(vsSet_EMB_InstanceMatrix)
+
+# #Move to informedness
+# """ From sci-kit lib confusion matrix return C as follow:
+# [...]Thus in binary classification, the count of true negatives is
+# :math:`C_{0,0}`, false negatives is :math:`C_{1,0}`, true positives is
+# :math:`C_{1,1}` and false positives is :math:`C_{0,1}`.
+# """    
+# tn, fp, fn, tp = confusion_matrix(vsSet_EMB_LabelVector, predicted_vsSet).ravel()
+# sensitivity = tp / (tp + fn)
+# specificity = tn / (tn + fp)
+# J = sensitivity + specificity - 1
+# J = (J + 1) / 2
+# error_rate = 1 - J
+
+# # accuracy = accuracy_score(vsSet_EMB_LabelVector, predicted_vsSet)
+# # error_rate = 1 - accuracy
+    
+# fitness = alpha * error_rate + (1 - alpha) * (len(ALPHABET) / bucketSize)   # add a small term in order to prefer small alphabets upon (pretty much) the same accuracy
+# # print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tAccuracy " + str(accuracy) + "\tAlphabet: " + str(len(ALPHABET)))
+# print("Parameters: " + str([round(i, 2) for i in genetic_code]) + "\tInformedness " + str(J) + "\tAlphabet: " + str(len(ALPHABET)))
