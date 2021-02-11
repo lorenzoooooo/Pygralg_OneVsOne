@@ -93,7 +93,6 @@ def ensembleGranulator(bucket, dissimilarityFunction, Q, eta, tau_f, theta_candi
     alphabet_exp = [(item[0].name, item[0], item[1]) for item in alphabet]  # alphabet_exp is a list of tuples of the form (subgraph ID, subgraph, radius)
     alphabet_exp = sorted(alphabet_exp, key=lambda x: x[0])                 # sort according to subgraph IDs so that duplicates are contiguous 
     alphabet_shrink = []
-    print('\n\n\tF',F,'\n\n')
     for k, g in itertools.groupby(alphabet_exp, lambda x: x[0]):
         g = list(g)                         # amongst all subgraphs having the same ID
         g = max(g, key=lambda x: x[-1])     # pick the one with largest radius (i.e., epsilon * compactness)

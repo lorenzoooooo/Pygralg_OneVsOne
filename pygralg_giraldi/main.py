@@ -619,7 +619,7 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
     TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
                                               bounds_GA1, \
                                               args=(coppie[label][0], bucketCoppie, thisSubset_tr, thisSubset_vs, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
-                                              maxiter=2, popsize=round(20/len(bounds_GA1)), \
+                                              maxiter=20, popsize=round(20/len(bounds_GA1)), \
                                               recombination=CXPB_GA1, \
                                               mutation=MUTPB_GA1, \
                                               workers=n_threads, polish=False, updating='deferred', disp=True)
@@ -657,51 +657,21 @@ for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
         ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
     elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
         ALPHABET = ensembleStratifiedGranulator(bucket, Diss.BMF, Q, eta, tau_f, numClasses, theta_candidates, epsilon, n_jobs=n_threads)
+
+    alphabet, tau_k = zip(*ALPHABET)
+    trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(trSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
+    vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(vsSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
     
-print(best_GA1)
-print("ALPHABET size: {}".format(len(ALPHABET)) )
-if len(ALPHABET)==0:
-    #print("coppia\t",coppie[label])
-    print("eta\t", eta)
-    print("tau_f\t",tau_f)
-    print("Q\t",Q)
-    print("Diss.nodesParam[sub]\t",Diss.nodesParam['sub'])
-    print("Diss.nodesParam[ins]\t",Diss.nodesParam['ins'])
-    print("Diss.nodesParam[del]\t",Diss.nodesParam['del'])
-    print("Diss.edgesParam[sub]\t",Diss.edgesParam['sub'])
-    print("Diss.edgesParam[ins]\t",Diss.edgesParam['ins'])
-    print("Diss.edgesParam[del]\t",Diss.edgesParam['del'])
-    print("theta_candidates\t",theta_candidates)
-    print("epsilon\t",epsilon)
-    pickle.dump({'Diss.nodesParam[sub]':Diss.nodesParam['sub'], 
-                  'Diss.nodesParam[ins]':Diss.nodesParam['ins'],
-                  'Diss.nodesParam[del]':Diss.nodesParam['del'],
-                  'Diss.edgesParam[sub]':Diss.edgesParam['sub'],
-                  'Diss.edgesParam[ins]':Diss.edgesParam['ins'],
-                  'Diss.edgesParam[del]':Diss.edgesParam['del'],
-                  'Q':Q,
-                  'eta':eta,
-                  'tau_f':tau_f,
-                  'theta_candidates':theta_candidates,
-                  'epsilon':epsilon,
-                  'bucketCoppie':bucketCoppie},
-                  open(dataName + '_' + extractStrategy_Granulator + '_' + coppie[label][0] + '_' + coppie[label][1] + '.pkl','wb'))
-    #ALPHABET = ensembleGranulator(bucketCoppie, Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
-    raise('error')
-alphabet, tau_k = zip(*ALPHABET)
-trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(trSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(vsSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-
-# trSetGlobalEmbed_Mat=numpy.concatenate((trSetGlobalEmbed_Mat,trSet_EMB_InstanceMatrix),axis=1)
-# vsSetGlobalEmbed_Mat=numpy.concatenate((vsSetGlobalEmbed_Mat,vsSet_EMB_InstanceMatrix),axis=1)
-
-# Deep copy dissimilarity measure and alphabet into a dict{class label: (Diss_ithClass,Alphabet_ithClass)}
-# __deepcopy__ operator will recursely copy everything needed to the object to exist,
-#including derived functions from other classes with relatives parameters.
-#Consequently this objects are no more binded to referenced objects and parameters for derived classes can be no longer changed
-# localDissM = copy.deepcopy(Diss)
-# localAlphabet= copy.deepcopy(ALPHABET)
-localConcepts[label] = (copy.deepcopy(Diss), alphabet, tau_k, trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix)
+    # trSetGlobalEmbed_Mat=numpy.concatenate((trSetGlobalEmbed_Mat,trSet_EMB_InstanceMatrix),axis=1)
+    # vsSetGlobalEmbed_Mat=numpy.concatenate((vsSetGlobalEmbed_Mat,vsSet_EMB_InstanceMatrix),axis=1)
+    
+    # Deep copy dissimilarity measure and alphabet into a dict{class label: (Diss_ithClass,Alphabet_ithClass)}
+    # __deepcopy__ operator will recursely copy everything needed to the object to exist,
+    #including derived functions from other classes with relatives parameters.
+    #Consequently this objects are no more binded to referenced objects and parameters for derived classes can be no longer changed
+    # localDissM = copy.deepcopy(Diss)
+    # localAlphabet= copy.deepcopy(ALPHABET)
+    localConcepts[label] = (copy.deepcopy(Diss), alphabet, tau_k, trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix)
    
 #ALPHABET, tau_k = zip(*ALPHABET)
 #trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(trSet_EXP, ALPHABET, tau_k, Diss.BMF, n_jobs=n_threads)
