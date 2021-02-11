@@ -140,7 +140,7 @@ def SpareBSAS(dataset, theta, Q, dissimilarityFunction):
     - clusters_DissimMatrix: list of clusters' dissimilarity matrices. """
 
     #seed fisso cosi ottengo sempre gli stessi cluster
-    random.seed(0)
+    random.seed(1)
     
     # Set useful parameters
     poolSize = 20
