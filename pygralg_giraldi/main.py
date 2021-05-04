@@ -446,176 +446,26 @@ coppie=list(combinations(range(numClasses),2))
 thisSubset_tr={}
 thisSubset_vs={}
 
-# for label in range(len(coppie)):
-#     ## Force to be samplePaths since we evolve k optimizer for k-classes
-#     extractStrategy_Granulator= "samplePaths"
-    
-#     j=0
-#     for k in trSet.keys():
-#         if trSet_EXP[k][1]==coppie[label][0] or trSet_EXP[k][1]==coppie[label][1]:
-#             thisSubset_tr[j]=trSet_EXP[k]
-#             j=j+1
-#     j=0
-#     for k in vsSet.keys():
-#         if vsSet_EXP[k][1]==coppie[label][0] or vsSet_EXP[k][1]==coppie[label][1]:
-#             thisSubset_vs[j]=vsSet_EXP[k]
-#             j=j+1
-
-#     # TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
-#     #                                          bounds_GA1, \
-#     #                                          args=(label,bucket[label], trSet_EXP, vsSet_EXP, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
-#     #                                          maxiter=20, popsize=round(20/len(bounds_GA1)), \
-#     #                                          recombination=CXPB_GA1, \
-#     #                                          mutation=MUTPB_GA1, \
-#     #                                          workers=n_threads, polish=False, updating='deferred', disp=True)
-#     print('\ncoppie: ',coppie[label],'\n')
-#     if coppie[label][0]==0 and coppie[label][1]==(numClasses-1):
-#         TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
-#                                               bounds_GA1, \
-#                                               args=(coppie[label][1],bucket[coppie[label][1]], thisSubset_tr, thisSubset_vs, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
-#                                               maxiter=2, popsize=round(20/len(bounds_GA1)), \
-#                                               recombination=CXPB_GA1, \
-#                                               mutation=MUTPB_GA1, \
-#                                               workers=n_threads, polish=False, updating='deferred', disp=True)
-#         best_GA1 = TuningResults_GA1.x
-#         """ Embedding with best alphabet """
-#         eta = best_GA1[0]
-#         tau_f = best_GA1[1]
-#         Q = round(best_GA1[2])
-        
-#         # parsing of additional weights, depending on the dataset
-#         if dataName == 'GREC':
-#             graphDissimilarity._vParam1 = best_GA1[9]
-#             graphDissimilarity._eParam1 = best_GA1[10]
-#             graphDissimilarity._eParam2 = best_GA1[11]
-#             graphDissimilarity._eParam3 = best_GA1[12]
-#             graphDissimilarity._eParam4 = best_GA1[13]
-#         if dataName == 'PROTEIN':
-#             graphDissimilarity._vParam1 = best_GA1[9]
-#             graphDissimilarity._eParam1 = best_GA1[10]
-#             graphDissimilarity._eParam2 = best_GA1[11]
-#             graphDissimilarity._eParam3 = best_GA1[12]
-#             graphDissimilarity._eParam4 = best_GA1[13]
-#             graphDissimilarity._eParam5 = best_GA1[14]
-        
-#         Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
-#         Diss.nodesParam['sub'] = best_GA1[3]
-#         Diss.nodesParam['ins'] = best_GA1[4]
-#         Diss.nodesParam['del'] = best_GA1[5]
-#         Diss.edgesParam['sub'] = best_GA1[6]
-#         Diss.edgesParam['ins'] = best_GA1[7]
-#         Diss.edgesParam['del'] = best_GA1[8]
-        
-#         #setting bucket[label] when sampletPaths is "on" is a kind of stratified granulation
-#         # if extractStrategy_Granulator in ['samplePaths', 'paths', 'cliques']:
-#         #     ALPHABET = ensembleGranulator(bucket[label], Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
-#         # elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
-#         #     ALPHABET = ensembleStratifiedGranulator(bucket, Diss.BMF, Q, eta, tau_f, numClasses, theta_candidates, epsilon, n_jobs=n_threads)
-#         if extractStrategy_Granulator in ['samplePaths', 'paths', 'cliques']:
-#             ALPHABET = ensembleGranulator(bucket[coppie[label][1]], Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
-#         elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
-#             ALPHABET = ensembleStratifiedGranulator(bucket, Diss.BMF, Q, eta, tau_f, numClasses, theta_candidates, epsilon, n_jobs=n_threads)
-        
-#         alphabet, tau_k = zip(*ALPHABET)
-#         trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_tr, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_vs, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         # trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(trSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         # vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(vsSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-        
-#         # trSetGlobalEmbed_Mat=numpy.concatenate((trSetGlobalEmbed_Mat,trSet_EMB_InstanceMatrix),axis=1)
-#         # vsSetGlobalEmbed_Mat=numpy.concatenate((vsSetGlobalEmbed_Mat,vsSet_EMB_InstanceMatrix),axis=1)
-        
-#         # Deep copy dissimilarity measure and alphabet into a dict{class label: (Diss_ithClass,Alphabet_ithClass)}
-#         # __deepcopy__ operator will recursely copy everything needed to the object to exist,
-#         #including derived functions from other classes with relatives parameters.
-#         #Consequently this objects are no more binded to referenced objects and parameters for derived classes can be no longer changed
-#         # localDissM = copy.deepcopy(Diss)
-#         # localAlphabet= copy.deepcopy(ALPHABET)
-#         #localConcepts[label] = (copy.deepcopy(Diss), alphabet, tau_k, trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix)
-#         localConcepts[label] = (copy.deepcopy(Diss), alphabet, tau_k, trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix)
-
-#     else:
-#         TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
-#                                               bounds_GA1, \
-#                                               args=(coppie[label][0],bucket[coppie[label][0]], thisSubset_tr, thisSubset_vs, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
-#                                               maxiter=2, popsize=round(20/len(bounds_GA1)), \
-#                                               recombination=CXPB_GA1, \
-#                                               mutation=MUTPB_GA1, \
-#                                               workers=n_threads, polish=False, updating='deferred', disp=True)
-#         best_GA1 = TuningResults_GA1.x
-#         """ Embedding with best alphabet """
-#         eta = best_GA1[0]
-#         tau_f = best_GA1[1]
-#         Q = round(best_GA1[2])
-    
-#         # parsing of additional weights, depending on the dataset
-#         if dataName == 'GREC':
-#             graphDissimilarity._vParam1 = best_GA1[9]
-#             graphDissimilarity._eParam1 = best_GA1[10]
-#             graphDissimilarity._eParam2 = best_GA1[11]
-#             graphDissimilarity._eParam3 = best_GA1[12]
-#             graphDissimilarity._eParam4 = best_GA1[13]
-#         if dataName == 'PROTEIN':
-#             graphDissimilarity._vParam1 = best_GA1[9]
-#             graphDissimilarity._eParam1 = best_GA1[10]
-#             graphDissimilarity._eParam2 = best_GA1[11]
-#             graphDissimilarity._eParam3 = best_GA1[12]
-#             graphDissimilarity._eParam4 = best_GA1[13]
-#             graphDissimilarity._eParam5 = best_GA1[14]
-    
-#         Diss = GED(graphDissimilarity.nodeDissimilarity, graphDissimilarity.edgeDissimilarity)
-#         Diss.nodesParam['sub'] = best_GA1[3]
-#         Diss.nodesParam['ins'] = best_GA1[4]
-#         Diss.nodesParam['del'] = best_GA1[5]
-#         Diss.edgesParam['sub'] = best_GA1[6]
-#         Diss.edgesParam['ins'] = best_GA1[7]
-#         Diss.edgesParam['del'] = best_GA1[8]
-    
-#         #setting bucket[label] when sampletPaths is "on" is a kind of stratified granulation
-#         # if extractStrategy_Granulator in ['samplePaths', 'paths', 'cliques']:
-#         #     ALPHABET = ensembleGranulator(bucket[label], Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
-#         # elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
-#         #     ALPHABET = ensembleStratifiedGranulator(bucket, Diss.BMF, Q, eta, tau_f, numClasses, theta_candidates, epsilon, n_jobs=n_threads)
-#         if extractStrategy_Granulator in ['samplePaths', 'paths', 'cliques']:
-#             ALPHABET = ensembleGranulator(bucket[coppie[label][0]], Diss.BMF, Q, eta, tau_f, theta_candidates, epsilon, n_jobs=n_threads)
-#         elif extractStrategy_Granulator in ['stratSamplePaths', 'stratSampleCliques']:
-#             ALPHABET = ensembleStratifiedGranulator(bucket, Diss.BMF, Q, eta, tau_f, numClasses, theta_candidates, epsilon, n_jobs=n_threads)
-    
-#         alphabet, tau_k = zip(*ALPHABET)
-#         trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_tr, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(thisSubset_vs, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         # trSet_EMB_InstanceMatrix, trSet_EMB_LabelVector = symbolicHistogramsEmbedder(trSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-#         # vsSet_EMB_InstanceMatrix, vsSet_EMB_LabelVector = symbolicHistogramsEmbedder(vsSet_EXP, alphabet, tau_k, Diss.BMF, n_jobs=n_threads)
-    
-#         # trSetGlobalEmbed_Mat=numpy.concatenate((trSetGlobalEmbed_Mat,trSet_EMB_InstanceMatrix),axis=1)
-#         # vsSetGlobalEmbed_Mat=numpy.concatenate((vsSetGlobalEmbed_Mat,vsSet_EMB_InstanceMatrix),axis=1)
-    
-#         # Deep copy dissimilarity measure and alphabet into a dict{class label: (Diss_ithClass,Alphabet_ithClass)}
-#         # __deepcopy__ operator will recursely copy everything needed to the object to exist,
-#         #including derived functions from other classes with relatives parameters.
-#         #Consequently this objects are no more binded to referenced objects and parameters for derived classes can be no longer changed
-#         # localDissM = copy.deepcopy(Diss)
-#         # localAlphabet= copy.deepcopy(ALPHABET)
-#         localConcepts[label] = (copy.deepcopy(Diss), alphabet, tau_k, trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix)
-
 bucketCoppie=[None]
 for label in range(len(coppie)):   #il numero di coppie è uguale a N(N-1)/2
     extractStrategy_Granulator= "samplePaths"
 
-    bucketCoppie= bucket[coppie[label][0]] + bucket[coppie[label][1]] #alfabeto composto da una coppia di classi
+    bucketCoppie= bucket[coppie[label][0]] + bucket[coppie[label][1]] #coppie per il granulator
     
+    #coppie per l'embedder
     j=0
-    for k in trSet.keys():
+    for k in trSet.keys(): #Tr Set
         if trSet_EXP[k][1]==coppie[label][0] or trSet_EXP[k][1]==coppie[label][1]:
             thisSubset_tr[j]=trSet_EXP[k]
             j=j+1
     j=0
-    for k in vsSet.keys():
+    for k in vsSet.keys(): #VsSet
         if vsSet_EXP[k][1]==coppie[label][0] or vsSet_EXP[k][1]==coppie[label][1]:
             thisSubset_vs[j]=vsSet_EXP[k]
             j=j+1
                 
     print('\ncoppie: ',coppie[label],'\n')
+    
     TuningResults_GA1=differential_evolution(fitnessfunction_GA1_DE, \
                                               bounds_GA1, \
                                               args=(coppie[label][0], bucketCoppie, thisSubset_tr, thisSubset_vs, extractStrategy_Granulator, graphDissimilarity, theta_candidates, epsilon, dataName),\
