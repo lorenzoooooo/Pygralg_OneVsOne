@@ -64,8 +64,7 @@ sampleStrategy = Graph_Sampling.SRW_RWF_ISRW()                  # declare the sa
 subgraphsOrder = 5                                              # max subgraphs order (only if cliques are NOT involved)
 theta_candidates = BSP(0, 1, 0.1)                               # list of theta candidates for BSAS
 epsilon = 1.1                                                   # tolerance value in symbols recognition
-#n_threads = 56                                                  # number of threads for parallel execution
-n_threads = 1
+n_threads = 56                                                  # number of threads for parallel execution
 delimiters = "_", "."                                           # Name file contains id and label
 
 
@@ -103,22 +102,19 @@ else:
 
 """ Define folder """
 if dataName == 'AIDS':
-#    trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Training/"                                                    # paths DIETrack1, 2 and 3
-#    vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Validation/"
-#    tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Test/"
-    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/AIDS/Training/"                                                    # paths DIETrack1, 2 and 3
-    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/AIDS/Validation/"
-    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/AIDS/Test/"
+    # trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Training/"                                                    # paths DIETrack1, 2 and 3
+    # vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Validation/"
+    # tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/AIDS/Test/"
+    trDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/AIDS/Training/"                                                 # paths DIETrack1, 2 and 3
+    vsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/AIDS/Validation/"
+    tsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/AIDS/Test/"
 elif dataName == 'Letter1':
-#     trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
-#     vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Validation/"
-#     tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Test/"
-    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Training/"                                                    # paths DIETrack1, 2 and 3
-    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Validation/"
-    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/dataset_IAM/Letter1/Test/"
-    # trDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
-    # vsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Validation/"
-    # tsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Test/"
+    # trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
+    # vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Validation/"
+    # tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter1/Test/"
+    trDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Training/"                                                 # paths DIETrack1, 2 and 3
+    vsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Validation/"
+    tsDir = "/home/LabRizzi/Documents/Luca_Baldini/IAM/IAMds/Letter1/Test/"
 elif dataName == 'Letter2':
 #     trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter2/Training/"                                                 # paths DIETrack1, 2 and 3
 #     vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Letter2/Validation/"
@@ -144,22 +140,16 @@ elif dataName == 'GREC':
     # vsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/GREC/Validation/"
     # tsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/GREC/Test/"
 elif dataName == 'PROTEIN':
-#     trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Training/"                                                    # paths DIETrack1, 2 and 3
-#     vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Validation/"
-#     tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Test/"
-    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Protein/Training/"                                                    # paths DIETrack1, 2 and 3
-    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Protein/Validation/"
-    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Protein/Test/"
+    trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Training/"                                                    # paths DIETrack1, 2 and 3
+    vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Validation/"
+    tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Protein/Test/"
     # trDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Protein/Training/"                                              # paths Luca
     # vsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Protein/Validation/"
     # tsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Protein/Test/"
 elif dataName == 'Mutagenicity':
-#     trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Training/"                                                    # paths DIETrack1, 2 and 3
-#     vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Validation/"
-#     tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Test/"
-    trDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Mutagenicity/Training/"                                                    # paths DIETrack1, 2 and 3
-    vsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Mutagenicity/Validation/"
-    tsDir = "C:/Users/Utente/Documents/Lorenzo/materiale_didattico_sapienza/lezioni/PR/pyGRALG_LML-master/lorenzo/dataset_IAM/Mutagenicity/Test/"
+    trDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Training/"                                                    # paths DIETrack1, 2 and 3
+    vsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Validation/"
+    tsDir = "/home/LabRizzi/Documents/Alessio_Martino/dataset_IAM/Mutagenicity/Test/"
     # trDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Mutagenicity/Training/"                                              # paths Luca
     # vsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Mutagenicity/Validation/"
     # tsDir = "/home/luca/Documenti/GRALG_dataset/IAM/IAMds/Mutagenicity/Test/"
@@ -531,8 +521,6 @@ elapsedTime_FirstGenetic = time.time() - t
 print("Elapsed Time [First GA]: " + str(elapsedTime_FirstGenetic) + " seconds.")
 print("\n")
 
-# for label in range(numClasses):
-#     localConcepts[label] = list(localConcepts[label])   # so we can change it later for test set
 for label in range(len(coppie)):
      localConcepts[label] = list(localConcepts[label])   # so we can change it later for test set
 
@@ -543,13 +531,6 @@ for label in range(len(coppie)):
     vsSet_EMB_InstanceMatrix[label] = localConcepts[label][4]
 trSet_EMB_InstanceMatrix = numpy.concatenate(trSet_EMB_InstanceMatrix, axis=1)
 vsSet_EMB_InstanceMatrix = numpy.concatenate(vsSet_EMB_InstanceMatrix, axis=1)
-# trSet_EMB_InstanceMatrix, vsSet_EMB_InstanceMatrix  = [None] * numClasses, [None] * numClasses
-# for label in range(numClasses):
-#     trSet_EMB_InstanceMatrix[label] = localConcepts[label][3]
-#     vsSet_EMB_InstanceMatrix[label] = localConcepts[label][4]
-# trSet_EMB_InstanceMatrix = numpy.concatenate(trSet_EMB_InstanceMatrix, axis=1)
-# vsSet_EMB_InstanceMatrix = numpy.concatenate(vsSet_EMB_InstanceMatrix, axis=1)
-
 
 # concatenate the alphabet
 ALPHABET = []
@@ -557,9 +538,6 @@ tau_k = []
 for label in range(len(coppie)):
     ALPHABET = ALPHABET + list(localConcepts[label][1])
     tau_k = tau_k + list(localConcepts[label][2])
-# for label in range(numClasses):
-#     ALPHABET = ALPHABET + list(localConcepts[label][1])
-#     tau_k = tau_k + list(localConcepts[label][2])
 
 """ GA for Feature Selection """
 # t = time.time()
@@ -602,17 +580,6 @@ tsSet_EMB_InstanceMatrix  = [None] * len(coppie)
 for label in range(len(coppie)):
     tsSet_EMB_InstanceMatrix[label] = localConcepts[label][-1]
 tsSet_EMB_InstanceMatrix = numpy.concatenate(tsSet_EMB_InstanceMatrix, axis=1)
-# for label in range(numClasses):
-#     classDiss = localConcepts[label][0]
-#     classAlphabet = localConcepts[label][1]
-#     classTau_k = localConcepts[label][2]
-#     tsSet_EMB_InstanceMatrix, tsSet_EMB_LabelVector = symbolicHistogramsEmbedder(tsSet_EXP, classAlphabet, classTau_k, classDiss.BMF, n_jobs=n_threads)
-#     localConcepts[label].append(tsSet_EMB_InstanceMatrix)
-
-# tsSet_EMB_InstanceMatrix  = [None] * numClasses
-# for label in range(numClasses):
-#     tsSet_EMB_InstanceMatrix[label] = localConcepts[label][-1]
-# tsSet_EMB_InstanceMatrix = numpy.concatenate(tsSet_EMB_InstanceMatrix, axis=1)
 
 trSet_EMB_InstanceMatrix_shrink = trSet_EMB_InstanceMatrix[:, numpy.array(best_GA2, dtype=bool)]
 vsSet_EMB_InstanceMatrix_shrink = vsSet_EMB_InstanceMatrix[:, numpy.array(best_GA2, dtype=bool)]
